@@ -4,7 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import { useState } from 'react';
 import DraggableItem from './components/draggable';
 import DroppableArea from './components/dropable';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import CustomList from './components/customList';
 import { useSelector,useDispatch } from 'react-redux';
 import { setTodo,removeTodo,setDoing,removeDoing,setDone,removeDone } from './slices/todoSlice';
@@ -15,6 +15,11 @@ function App() {
   const todo=useSelector((state)=>state.todo)
   const doing=useSelector((state)=>state.doing)
   const done=useSelector((state)=>state.done)
+
+  const mouseSensor = useSensor(MouseSensor)
+  const touchSensor = useSensor(TouchSensor);
+
+  const sensors = useSensors(touchSensor,mouseSensor);
  
 
   const handleDragEnd = (event) => {
@@ -76,7 +81,7 @@ function App() {
   }
   return (
     <div className='main'>
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <Row className='m-0 gap10'>
         <Col className='whiteCard'>
         <CustomList label={"Todo"} arr={todo} type={"todo"}/>
